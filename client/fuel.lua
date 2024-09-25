@@ -1,4 +1,4 @@
-local config = require 'config'
+--local cfg = require 'cfg'
 local state = require 'client.state'
 local utils = require 'client.utils'
 local fuel = {}
@@ -15,44 +15,15 @@ function fuel.setFuel(vehState, vehicle, amount, replicate)
     vehState:set('fuel', amount, replicate)
   end
 end
---[[
-function fuel.getPetrolCan(coords, refuel)
-  TaskTurnPedToFaceCoord(cache.ped, coords.x, coords.y, coords.z, config.petrolCan.duration)
-  Wait(500)
 
-  if lib.progressCircle({
-    duration = config.petrolCan.duration,
-    useWhileDead = false,
-    canCancel = true,
-    disable = {
-      move = true,
-      car = true,
-      combat = true,
-    },
-    anim = {
-      dict = 'timetable@gardener@filling_can',
-      clip = 'gar_ig_5_filling_can',
-      flags = 49,
-    }
-  }) then
-    if refuel and exports.ox_inventory:GetItemCount('WEAPON_PETROLCAN') then
-      return TriggerServerEvent('ox_fuel:fuelCan', true, config.petrolCan.refillPrice)
-    end
-
-    TriggerServerEvent('ox_fuel:fuelCan', false, config.petrolCan.price)
-  end
-
-  ClearPedTasks(cache.ped)
-end
-]]
 function fuel.startFueling(vehicle, isPump)
   local vehState = Entity(vehicle).state
   local fuelAmount = vehState.fuel or GetVehicleFuelLevel(vehicle)
-  local duration = math.ceil((100 - fuelAmount) / config.refillValue) * config.refillTick
+  local duration = math.ceil((100 - fuelAmount) / cfg.refillValue) * cfg.refillTick
   local price, moneyAmount
   local durability = 0
 
-  if 100 - fuelAmount < config.refillValue then
+  if 100 - fuelAmount < cfg.refillValue then
     return lib.notify({ type = 'error', description = locale('tank_full') })
   end
 
@@ -60,10 +31,10 @@ function fuel.startFueling(vehicle, isPump)
     price = 0
     moneyAmount = utils.getMoney()
 
-    if config.priceTick > moneyAmount then
+    if cfg.priceTick > moneyAmount then
       return lib.notify({
         type = 'error',
-        description = locale('not_enough_money', config.priceTick)
+        description = locale('not_enough_money', cfg.priceTick)
       })
     end
   end
@@ -94,31 +65,23 @@ function fuel.startFueling(vehicle, isPump)
 
   while state.isFueling do
     if isPump then
-      price += config.priceTick
+      price += cfg.priceTick
 
-      if price + config.priceTick >= moneyAmount then
+      if price + cfg.priceTick >= moneyAmount then
         lib.cancelProgress()
-      end
-    elseif state.petrolCan then
-      durability += config.durabilityTick
-
-      if durability >= state.petrolCan.metadata.ammo then
-        lib.cancelProgress()
-        durability = state.petrolCan.metadata.ammo
-        break
       end
     else
       break
     end
 
-    fuelAmount += config.refillValue
+    fuelAmount += cfg.refillValue
 
     if fuelAmount >= 100 then
       state.isFueling = false
       fuelAmount = 100.0
     end
 
-    Wait(config.refillTick)
+    Wait(cfg.refillTick)
   end
 
   ClearPedTasks(cache.ped)

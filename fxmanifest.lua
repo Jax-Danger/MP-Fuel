@@ -3,11 +3,7 @@ use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 game 'gta5'
 
-name 'ox_fuel'
-author 'Overextended'
-version '1.5.1'
-repository 'https://github.com/overextended/ox_fuel'
-description 'Fuel management system with ox_inventory support'
+ui_page "build/index.html"
 
 dependencies {
   'ox_lib',
@@ -24,12 +20,14 @@ server_scripts {
   'server.lua'
 }
 
-client_script 'client/init.lua'
+client_scripts {'client/init.lua', 'client/client.lua'}
 
 files {
   'locales/*.json',
   'data/stations.lua',
   'client/*.lua',
+  "build/index.html",
+  "build/**/*"
 }
 
 ox_libs {
