@@ -10,28 +10,29 @@ repository 'https://github.com/overextended/ox_fuel'
 description 'Fuel management system with ox_inventory support'
 
 dependencies {
-	'ox_lib',
-	'ox_inventory',
+  'ox_lib',
+  'MP-Base',
+  'MP-Inventory',
 }
 
 shared_scripts {
-	'@ox_lib/init.lua',
-	'config.lua'
+  '@ox_lib/init.lua',
+  'config.lua'
 }
 
 server_scripts {
-	'server.lua'
+  'server.lua'
 }
 
 client_script 'client/init.lua'
 
 files {
-	'locales/*.json',
-	'data/stations.lua',
-	'client/*.lua',
+  'locales/*.json',
+  'data/stations.lua',
+  'client/*.lua',
 }
 
 ox_libs {
-	'math',
-	'locale',
+  'math',
+  'locale',
 }

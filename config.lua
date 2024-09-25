@@ -1,12 +1,9 @@
-if not lib.checkDependency('ox_lib', '3.22.0', true) then return end
-if not lib.checkDependency('ox_inventory', '2.30.0', true) then return end
-
 return {
 	-- Get notified when a new version releases
-	versionCheck = true,
+	versionCheck = false,
 
 	-- Enable support for ox_target
-	ox_target = false,
+	ox_target = true,
 
 	/*
 	* Show or hide gas stations blips

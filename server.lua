@@ -1,10 +1,7 @@
 local config = require 'config'
-
 if not config then return end
 
-if config.versionCheck then lib.versionCheck('overextended/ox_fuel') end
-
-local ox_inventory = exports.ox_inventory
+--local ox_inventory = exports.ox_inventory
 
 local function setFuelState(netId, fuel)
 	local vehicle = NetworkGetEntityFromNetworkId(netId)
@@ -23,11 +20,11 @@ end
 ---@param price number
 ---@return boolean?
 local function defaultPaymentMethod(playerId, price)
-	local success = ox_inventory:RemoveItem(playerId, 'money', price)
+	local success = exports['MP-Base']:changeMoney(playerId, 'cash', price, 'del')
 
 	if success then return true end
 
-	local money = ox_inventory:GetItemCount(source, 'money')
+	local money = exports['MP-Base']:GetPlayerData(playerId, 'cash')
 
 	TriggerClientEvent('ox_lib:notify', source, {
 		type = 'error',
@@ -54,7 +51,7 @@ RegisterNetEvent('ox_fuel:pay', function(price, fuel, netid)
 		description = locale('fuel_success', fuel, price)
 	})
 end)
-
+--[[
 RegisterNetEvent('ox_fuel:fuelCan', function(hasCan, price)
 	if hasCan then
 		local item = ox_inventory:GetCurrentWeapon(source)
@@ -88,7 +85,6 @@ RegisterNetEvent('ox_fuel:fuelCan', function(hasCan, price)
 		})
 	end
 end)
-
 RegisterNetEvent('ox_fuel:updateFuelCan', function(durability, netid, fuel)
 	local source = source
 	local item = ox_inventory:GetCurrentWeapon(source)
@@ -104,3 +100,4 @@ RegisterNetEvent('ox_fuel:updateFuelCan', function(durability, netid, fuel)
 
 	-- player is sus?
 end)
+]]
